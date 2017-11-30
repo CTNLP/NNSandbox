@@ -38,7 +38,6 @@ package = utils.rnn.pack_padded_sequence(var,[3,2])
 
 # print(var)
 #print(rnn(var))
-print("---------")
 
 # layers, batch size, hidden size
 #init = torch.zeros((1,2,1))
@@ -47,4 +46,20 @@ print("---------")
 # result contains  [summary of all time steps, but interleaved,[final forward,final backward]]
 # padding steps are properly ignored
 # check what happens with bias
-print(rnn(package))
+result = rnn(package)
+
+# compare results from unpackaged and packaged sequence
+print(rnn(var))
+print(result)
+
+packed_result = result[0]
+
+# just the packaged part of the sequence
+print packed_result
+
+# here we turn the packaged part of the sequence back into a padded sequence
+unpacked = utils.rnn.pad_packed_sequence(packed_result,batch_first=False)
+
+print unpacked
+
+# note losses do not work with packed sequences, you still have to iterate over the entries in the result for that
